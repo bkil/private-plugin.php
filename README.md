@@ -231,6 +231,8 @@ RFC7230
 * **4096** characters: address mask in AdGuard filter https://kb.adguard.com/en/general/how-to-create-your-own-ad-filters#basic-rules-syntax
 * https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
 * https://web.archive.org/web/20190902193246/https://boutell.com/newfaq/misc/urllength.html
+* **1024** characters: A HREF attribute in HTML 2.0 (LITLEN) https://www.w3.org/MarkUp/html-spec/html-spec_3.html#SEC3.2.4
+* **65536** characters: A HREF attribute in HTML 3.2 (LITLEN) https://www.w3.org/TR/2018/SPSD-html32-20180315/#sgmldecl
 
 ### Client address bar URI length limit
 
