@@ -38,10 +38,10 @@ function publish($file, $author_priv, $author_pub, $web_key) {
 
   $coded = base64_encode($signature . $encrypted);
   if (!file_exists('var/hostname.txt')) {
-    file_put_contents('var/hostname.txt', 'http://localhost:8080');
+    file_put_contents('var/hostname.txt', 'http://localhost:8080/');
   }
   $host = str_replace(PHP_EOL, '', file_get_contents('var/hostname.txt'));
-  $url = $host . '/?p=' . $coded;
+  $url = $host . '?p=' . $coded;
   file_put_contents('var/test.url', $url);
   print($url . PHP_EOL);
 

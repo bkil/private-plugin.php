@@ -2,7 +2,7 @@
 <html>
   <head><title>URIpedia</title></head>
 <body>
-  <form action=//<?php echo $_SERVER['HTTP_HOST'];?> method=post>
+  <form action=//<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']?> method=post>
   <textarea name=o maxlength=4096 rows=20 cols=40 placeholder=URIpedia><?php
     if (isset($_POST['o']) && !isset($_POST['r'])) {
       file_put_contents('w.txt', substr(htmlspecialchars($_POST['o']), 0, 4096));
