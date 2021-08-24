@@ -55,7 +55,7 @@ function publish($file, $author_priv, $author_pub, $web_key) {
   $src = str_replace('{{signature_length}}', strlen($signature), $src);
   $src = str_replace('{{cipher}}', $cipher, $src);
   $src = str_replace('{{cipher_iv_length}}', $ivlen, $src);
-  file_put_contents('deploy/private-plugin.php', $src);
+  file_put_contents('deploy/index.php', $src);
 }
 
 function strip_php(string $in): string {
