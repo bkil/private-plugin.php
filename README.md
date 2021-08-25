@@ -27,6 +27,8 @@ This is achieved by a very short, almost trivial script that processes requests 
 * Runtime overhead of decryption: not very high with today's CPU acceleration
 * Public key cryptography based signature verification: can take some time depending on the chosen algorithm and the size of the key
   * Could be optimized later on to only run when first encountering a given plugin
+* Opcode cache and probably JIT aren't applicable for runtime constructed source code.
+  * Unpacking plugins to `tmpfs` could mitigate this.
 
 ## Installation
 
@@ -48,6 +50,22 @@ You should host all sources containing this code from a separate, possibly stati
 * [Perfect forward secrecy](https://en.wikipedia.org/wiki/Forward_secrecy#Protocols): can possibly be approximated when communicating using JavaScript by splitting in two consecutive HTTP requests and connecting them via a session cookie or some other token
 * For increased protection, material stored in the database or accessed from another web server (potentially also via PFS) could be mixed into the key material before use.
 * Enable caching of large plugins on tmpfs perhaps encrypted with a different key to be provided along with thin variants of requests so that the majority of requests would not need to send and verify the same plugin repeatedly. The decrypted plugin would still only be accessible for the duration of processing a request.
+
+### Usable character set for more efficient encoding
+
+`[?][A-Za-z0-9._~!$&'()*+,;=:@/?-]*`
+
+* Theoretical character set size: 81, 6.34 bit/byte
+* Reduction compared to base-64: -5%
+* Chromium and Firefox
+  * Disallowed by standard: `[][\u0000-\u001f "#%<>\\^`{|}]`
+  * Encodes: `[']`
+  * Maintains: ```[][\\^`{|}]```
+  * Overall 6.46 bit/byte
+* References
+  * https://www.rfc-editor.org/rfc/rfc3986.html#section-3.4
+  * https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Syntax
+  * https://en.wikipedia.org/wiki/Percent-encoding#The_application/x-www-form-urlencoded_type
 
 ### Related concepts
 
