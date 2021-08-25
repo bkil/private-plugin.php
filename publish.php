@@ -1,8 +1,13 @@
 <?php
 function main() {
   $keys = get_keys();
-  publish('example/wiki.php', $keys[0], $keys[1], $keys[2]);
-//  publish('example/date.php', $keys[0], $keys[1], $keys[2]);
+  $p_get_to_post = publish('example/get-to-post.php', $keys, $create_index=true);
+  $p_wiki = publish('example/wiki.php', $keys);
+
+  $host = str_replace(PHP_EOL, '', file_get_contents('var/hostname.txt'));
+  $url = $host . '?p=' . $p_get_to_post . '#' . $p_wiki;
+  file_put_contents('var/test.url', $url);
+  print($url . PHP_EOL);
 }
 
 function get_keys(): array {
@@ -21,7 +26,10 @@ function get_keys(): array {
   return array($author[0], $author[1], $web_key);
 }
 
-function publish($file, $author_priv, $author_pub, $web_key) {
+function publish($file, $keys, $create_index = false): string {
+  $author_priv = $keys[0];
+  $author_pub = $keys[1];
+  $web_key = $keys[2];
   $compressed = gzdeflate(strip_php(file_get_contents($file)));
 
   $cipher = 'AES-256-CTR';
@@ -40,22 +48,22 @@ function publish($file, $author_priv, $author_pub, $web_key) {
   if (!file_exists('var/hostname.txt')) {
     file_put_contents('var/hostname.txt', 'http://localhost:8080/');
   }
-  $host = str_replace(PHP_EOL, '', file_get_contents('var/hostname.txt'));
-  $url = $host . '?p=' . $coded;
-  file_put_contents('var/test.url', $url);
-  print($url . PHP_EOL);
 
-  if (!file_exists('deploy') && !mkdir('deploy')) {
-    err_exit('mkdir deploy');
+  if ($create_index) {
+    if (!file_exists('deploy') && !mkdir('deploy')) {
+      err_exit('mkdir deploy');
+    }
+    $src = file_get_contents('private-plugin.template.php');
+    $src = str_replace('{{author.pub}}', $author_pub, $src);
+    $src = str_replace('{{web.key}}', base64_encode($web_key), $src);
+    $src = str_replace('{{signature_digest}}', $signature_digest, $src);
+    $src = str_replace('{{signature_length}}', strlen($signature), $src);
+    $src = str_replace('{{cipher}}', $cipher, $src);
+    $src = str_replace('{{cipher_iv_length}}', $ivlen, $src);
+    file_put_contents('deploy/index.php', $src);
   }
-  $src = file_get_contents('private-plugin.template.php');
-  $src = str_replace('{{author.pub}}', $author_pub, $src);
-  $src = str_replace('{{web.key}}', base64_encode($web_key), $src);
-  $src = str_replace('{{signature_digest}}', $signature_digest, $src);
-  $src = str_replace('{{signature_length}}', strlen($signature), $src);
-  $src = str_replace('{{cipher}}', $cipher, $src);
-  $src = str_replace('{{cipher_iv_length}}', $ivlen, $src);
-  file_put_contents('deploy/index.php', $src);
+
+  return $coded;
 }
 
 function strip_php(string $in): string {
