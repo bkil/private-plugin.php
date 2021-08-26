@@ -1,5 +1,14 @@
 <?php
-if (isset($_POST['p'])) $p = $_POST['p']; else $p = $_GET['p'];
+if (isset($_POST['p'])) {
+  $p = $_POST['p'];
+} elseif (isset($_GET['p'])) {
+  $p = $_GET['p'];
+} else {
+  header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+  header('Content-Type: text/html');
+  ?>{{get_to_post.php}}<?php
+  exit(1);
+}
 $d = base64_decode(str_replace(' ', '+', $p));
 $s = substr($d, 0, {{signature_length}});
 $d = substr($d, {{signature_length}});

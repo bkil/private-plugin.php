@@ -1,11 +1,10 @@
 <?php
 function main() {
   $keys = get_keys();
-  $p_get_to_post = publish('example/get-to-post.php', $keys, $create_index=true);
-  $p_wiki = publish('example/wiki.php', $keys);
+  $p_wiki = publish('example/wiki.php', $keys, $create_index=true);
 
   $host = str_replace(PHP_EOL, '', file_get_contents('var/hostname.txt'));
-  $url = $host . '?p=' . $p_get_to_post . '#' . $p_wiki;
+  $url = $host . '#' . $p_wiki;
   file_put_contents('var/test.url', $url);
   print($url . PHP_EOL);
 }
@@ -30,7 +29,7 @@ function publish($file, $keys, $create_index = false): string {
   $author_priv = $keys[0];
   $author_pub = $keys[1];
   $web_key = $keys[2];
-  $compressed = gzdeflate(strip_php(file_get_contents($file)));
+  $compressed = gzdeflate(strip_php($file));
 
   $cipher = 'AES-256-CTR';
   $ivlen = openssl_cipher_iv_length($cipher);
@@ -60,14 +59,18 @@ function publish($file, $keys, $create_index = false): string {
     $src = str_replace('{{signature_length}}', strlen($signature), $src);
     $src = str_replace('{{cipher}}', $cipher, $src);
     $src = str_replace('{{cipher_iv_length}}', $ivlen, $src);
+    $src = str_replace('{{get_to_post.php}}', strip_php('example/get-to-post.php'), $src);
     file_put_contents('deploy/index.php', $src);
   }
 
   return $coded;
 }
 
-function strip_php(string $in): string {
-  return preg_replace('~^<[?]php\s*~', '', $in);
+function strip_php(string $file): string {
+  $out = file_get_contents($file);
+  $out = preg_replace('~^<[?]php\s*~', '', $out);
+  $out = preg_replace('~\s*$~', '', $out);
+  return $out;
 }
 
 function get_priv_pub_key(string $priv_file, string $pub_file): array {
