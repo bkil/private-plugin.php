@@ -7,7 +7,7 @@
     if (isset($_POST['o']) && !isset($_POST['r'])) {
       file_put_contents('w.txt', substr(htmlspecialchars($_POST['o']), 0, 4096));
     }
-    echo file_get_contents('w.txt') . date(PHP_EOL . 'h:m:s ');
+    echo file_get_contents('w.txt') . date(PHP_EOL . 'D H:i ');
   ?></textarea>
   <br/>
   <input name=p type=hidden value="<?php echo $p;?>">
