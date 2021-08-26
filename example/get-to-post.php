@@ -11,7 +11,7 @@
   </script>
 </head>
 <body>
-  <form id=f action=//<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];?> method=post>
+  <form action=. method=post>
     <label for=p>Copy URI fragment after # here</label>
     <br>
     <input id=p name=p type=text>
@@ -22,7 +22,7 @@
   <script>
     if (a) {
       document.getElementById("p").value = a;
-      document.getElementById("f").submit();
+      document.forms[0].submit();
     }
   </script>
 </body>

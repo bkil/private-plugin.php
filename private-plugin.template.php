@@ -16,6 +16,7 @@ $a = <<<EOF
 {{author.pub}}
 EOF;
 if (1 !== openssl_verify($d, $s, $a, {{signature_digest}})) {
+  header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
   exit(1);
 }
 
@@ -24,7 +25,7 @@ $i = substr($d, 0, {{cipher_iv_length}});
 $d = substr($d, {{cipher_iv_length}});
 $d = openssl_decrypt($d, '{{cipher}}', $k, OPENSSL_RAW_DATA, $i);
 $d = gzinflate($d);
-if (substr($d, 0, 1) === '<') {
+if ($d[0] == '<') {
   $d = '?>' . $d;
 }
 eval($d);
