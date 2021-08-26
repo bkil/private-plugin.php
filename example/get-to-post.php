@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>POST</title>
+  <link rel="shortcut icon" type=image/x-icon href=data:image/x-icon;,>
   <style id=h></style>
   <script>
     a = window.location.hash.substring(1);

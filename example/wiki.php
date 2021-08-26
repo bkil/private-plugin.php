@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html>
-  <head><title>URIpedia</title></head>
+<head>
+  <title>URIpedia</title>
+  <link rel="shortcut icon" type=image/x-icon href=data:image/x-icon;,>
+</head>
 <body>
-  <form action=//<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']?> method=post>
-  <textarea name=o maxlength=4096 rows=20 cols=40 placeholder=URIpedia><?php
-    if (isset($_POST['o']) && !isset($_POST['r'])) {
+  <form action=. method=post>
+  <label for=o>Share your knowledge here</label>
+  <br>
+  <textarea id=o name=o maxlength=4096 rows=20 cols=40><?php
+    if (isset($_POST['o']) && isset($_POST['w'])) {
       file_put_contents('w.txt', substr(htmlspecialchars($_POST['o']), 0, 4096));
     }
-    echo file_get_contents('w.txt') . date(PHP_EOL . 'D H:i ');
+    readfile('w.txt');
+    echo date(PHP_EOL . 'D H:i ');
   ?></textarea>
   <br/>
-  <input name=p type=hidden value="<?php echo $p;?>">
-  <input type=submit value=Save>
-  <input name=r type=submit value=Refresh>
+  <input type=submit name=w value=Save>
+  <input type=submit value=Refresh>
+  <input type=hidden name=p value="<?php echo $p;?>">
   </form>
-</body></html>
+</body>
+</html>
