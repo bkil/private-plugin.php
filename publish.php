@@ -1,7 +1,7 @@
 <?php
 function main() {
   $keys = get_keys();
-  $p_wiki = publish('example/wiki.php', $keys, $create_index=true);
+  $p_wiki = publish('example/public-file.php', $keys, $create_index=true);
 
   $host = str_replace(PHP_EOL, '', file_get_contents('var/hostname.txt'));
   $url = $host . '#' . $p_wiki;
