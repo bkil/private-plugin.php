@@ -1,10 +1,10 @@
 <?php
 function main() {
   $keys = get_keys();
-  $p_wiki = publish('example/public-file.php', $keys, $create_index=true);
+  $p = publish('example/publish-pic.php', $keys, $create_index=true);
 
   $host = str_replace(PHP_EOL, '', file_get_contents('var/hostname.txt'));
-  $url = $host . '#' . $p_wiki;
+  $url = $host . '#' . $p;
   file_put_contents('var/test.url', $url);
   print($url . PHP_EOL);
 }
