@@ -106,7 +106,8 @@ You should host all sources containing this code from a separate, possibly stati
 
 * There is lot of potential that could be researched, but I'll leave it to the audience to decide which should be the next step.
 * Elliptic curve cryptography would enable using a shorter signature and lead to more efficient verification
-* The signature could serve as a seed for the initialization vector.
+* [HMAC-SHA256](https://en.wikipedia.org/wiki/HMAC) (or even HMAC-SHA1) could also be good enough for certain threat models, while being much faster.
+* The signature (or hash) could serve as a seed for the initialization vector to encryption.
 * [Perfect forward secrecy](https://en.wikipedia.org/wiki/Forward_secrecy#Protocols): can possibly be approximated when communicating using JavaScript by splitting in two consecutive HTTP requests and connecting them via a session cookie or some other token
   * Only needed if one of your nodes is not HTTPS-enabled.
 * For increased protection, material stored in the database or accessed from another web server (potentially also via PFS) could be mixed into the key material before use.
@@ -147,6 +148,54 @@ You should host all sources containing this code from a separate, possibly stati
   * See [peppering](https://en.wikipedia.org/wiki/Pepper_(cryptography))
   * Ideally, where available, use a tmpfs mounted location that gets lost on power failure and needs to get reloaded after every boot, like `/dev/shm`, `/run/lock` or `/run/user/$UID`
 * TODO: can some kind of a scheme for privacy or integrity be devised using `.htaccess` and SSI for static web servers?
+
+## References
+
+* https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload
+
+### Server side URI length limit
+
+Multiple kinds of limitations may apply depending on configuration:
+
+* maximum size of HTTP URI
+* maximum size of HTTP request line
+* maximum size for all HTTP request headers combined (without POST body)
+* maximum size of complete HTTP request
+
+Some examples gathered from online comments:
+
+* **8190** (bytes, default) Apache 2
+  * https://stackoverflow.com/questions/2586339/how-to-increase-apache-2-uri-length-limit
+  * https://httpd.apache.org/docs/2.4/mod/core.html#limitrequestline
+* **8kB** nginx https://nginx.org/en/docs/http/ngx_http_core_module.html#large_client_header_buffers
+* **4094** (bytes, default): Python Gunicorn https://docs.gunicorn.org/en/stable/settings.html#limit-request-line
+* **8192**: Tomcat https://www.servoyforge.net/issues/99
+* **8kB** Fastly CDN https://docs.fastly.com/en/guides/resource-limits#request-and-header-limits
+* **8192** Amazon CloudFront CDN https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html#limits-general
+* **32KB** CloudFlare CDN https://support.cloudflare.com/hc/en-us/articles/115003014512-4xx-Client-Error#code_414
+* **4000**: NI LabView2012
+* **511**: NI LabView2013 https://lavag.org/topic/18435-web-service-url-length-limits-lv2013-vs-lv2012/
+
+RFC7230
+
+* http://tools.ietf.org/html/rfc7230#section-3.1.1
+> It is RECOMMENDED that all HTTP senders and recipients support, at a minimum, request-line lengths of **8000** octets
+
+### Client navigation URI length limit
+
+* **2083**: Internet Explorer 8
+  * https://support.microsoft.com/en-us/topic/maximum-url-length-is-2-083-characters-in-internet-explorer-174e7c8a-6666-f4e0-6fd6-908b53c12246
+  * https://www.seroundtable.com/google-url-characters-18219.html
+* **4043**: Internet Explorer 9, 10, 11
+* **100k+**: Firefox, 80k+ Safari, 190k+ Opera https://linux.m2osw.com/url_limits?page=2
+* **2048:** sitemaps?
+* https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+* https://web.archive.org/web/20190902193246/https://boutell.com/newfaq/misc/urllength.html
+
+### Client address bar URI length limit
+
+* **8192** Android
+* **2047** IE11, Edge
 
 ## Copyright
 
