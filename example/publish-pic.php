@@ -29,10 +29,10 @@ if (isset($_FILES['f'])) {
   $t = $f['tmp_name'];
   $s = $f['size'];
   $c = dirsize('.');
-  if (($f['error'] === UPLOAD_ERR_OK) && ($s < 1e5) && ($s + $c[1] < 1e6) && ($c[0] < 1e3) && (@mime_content_type($t) == 'image/jpeg')) {
+  if (($f['error'] === UPLOAD_ERR_OK) && ($s < 1e5) && ($s + $c[1] < 1e6) && ($c[0] < 1e3) && (is_uploaded_file($t)) && (@mime_content_type($t) == 'image/jpeg')) {
     $o = strval($m);
     @mkdir($o);
-    $d = $o . '/' . sha1(file_get_contents($t)) . '.jpeg';
+    $d = $o . '/' . sha1_file($t) . '.jpeg';
     if (move_uploaded_file($t, $d)) {
       header('Location: ' . $d, true, 302);
       $e = false;
@@ -44,7 +44,7 @@ header('content-type: text/html; charset=utf-8');
 ?><!DOCTYPE html>
 <html>
 <head>
-  <meta charset=utf-8 />
+  <meta charset=utf-8>
   <title>publish-pic</title>
   <link rel="shortcut icon" type=image/x-icon href=data:image/x-icon;,>
 </head>
