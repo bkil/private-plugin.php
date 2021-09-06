@@ -59,7 +59,7 @@ function publish($file, $keys, $create_index = false): string {
     $src = str_replace('{{signature_length}}', strlen($signature), $src);
     $src = str_replace('{{cipher}}', $cipher, $src);
     $src = str_replace('{{cipher_iv_length}}', $ivlen, $src);
-    $src = str_replace('{{get_to_post.php}}', strip_php('example/get-to-post.php'), $src);
+    $src = str_replace('{{get_to_post}}', strip_php('example/get-to-post.html'), $src);
     file_put_contents('deploy/index.php', $src);
   }
 

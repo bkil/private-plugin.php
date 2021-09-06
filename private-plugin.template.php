@@ -6,7 +6,7 @@ if (isset($_POST['p'])) {
 } else {
   header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
   header('Content-Type: text/html');
-  ?>{{get_to_post.php}}<?php
+  ?>{{get_to_post}}<?php
   exit(1);
 }
 $d = base64_decode(str_replace(' ', '+', $p));
