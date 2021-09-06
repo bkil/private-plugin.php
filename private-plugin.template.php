@@ -5,7 +5,6 @@ if (isset($_POST['p'])) {
   $p = $_GET['p'];
 } else {
   header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
-  header('Content-Type: text/html');
   ?>{{get_to_post}}<?php
   exit(1);
 }

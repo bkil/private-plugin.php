@@ -40,7 +40,6 @@ if (isset($_FILES['f'])) {
   }
 }
 if ($e) {
-header('content-type: text/html; charset=utf-8');
 ?><!DOCTYPE html>
 <html>
 <head>
