@@ -13,12 +13,12 @@ function main() {
 
   $f = frontend('../../example/publish-pic-fe.html', $p, $s, $host);
 
-  $data_uri = 'data:text/html;,' . rawurlencode_unsafe($f);
+  $data_uri = 'data:text/html;,' . rawurlencode_matrix($f);
   $surl = $host . 'k.html#' . $data_uri;
   print($surl . PHP_EOL);
 
   $iframe = 'document.getElementsByTagName(\'body\')[0].innerHTML="<iframe width=100% height=200px src=\"' . $data_uri . '\"></iframe>";';
-  $iurl = $host . 'j.html#' . rawurlencode_unsafe($iframe);
+  $iurl = $host . 'j.html#' . rawurlencode_matrix($iframe);
   print($iurl . PHP_EOL);
 
   put_var('test.url', $surl);

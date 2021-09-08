@@ -1,5 +1,16 @@
 <?php
 
+// Matrix Element has a bug that it eats certain rich formatting characters even in URI's
+// It also unencodes HTML entities like &amp; in non-preformatted context
+function rawurlencode_matrix(string $s): string {
+  $s = preg_replace_callback(
+        '"[^][A-Za-z0-9._~!$\'(),;=:@/?\\^`{|}+-]"',
+        function ($m) { return rawurlencode($m[0]); },
+        $s);
+  $s = str_replace('*', '%2a', $s);
+  return $s;
+}
+
 function rawurlencode_unsafe(string $s): string {
   return
     preg_replace_callback(
