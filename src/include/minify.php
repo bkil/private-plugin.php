@@ -14,7 +14,7 @@ function rawurlencode_matrix(string $s): string {
 function rawurlencode_unsafe(string $s): string {
   return
     preg_replace_callback(
-      '"[^][A-Za-z0-9._~!$&\'()*,;=:@/?*\\^`{|}+-]"',
+      '"[^][A-Za-z0-9._~!$&\'()*,;=:@/?\\^`{|}+-]"',
       function ($m) { return rawurlencode($m[0]); },
       $s);
 }
@@ -22,18 +22,20 @@ function rawurlencode_unsafe(string $s): string {
 function urlencode_unsafe(string $s): string {
   return
     preg_replace_callback(
-      '"[^][A-Za-z0-9._~!$&\'()*,;=:@/?*\\^`{|}-]"',
+      '"[^][A-Za-z0-9._~!$&\'()*,;=:@/?\\^`{|}-]"',
       function ($m) { return urlencode($m[0]); },
       $s);
 }
 
 function minify_php(string $s, bool $single_line = true): string {
+  // this is not a full set - do improve on demand
   $s = preg_replace('~//[^\n]*~', '', $s);
   return minify($s, $single_line, '[a-z0-9_]');
 }
 
 function minify_html(string $s, bool $single_line = true): string {
-  return minify($s, $single_line, '[a-z0-9_/"\".{}-]');
+  // this is not a full set - do improve on demand
+  return minify($s, $single_line, '[a-z0-9_/"\".{}=*-]');
 }
 
 function minify(string $s, bool $single_line, string $wordchars): string {

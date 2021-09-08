@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>max 100k</title>
+  <title>pic</title>
 </head>
 <body>
   <form action=((form_action)) enctype=multipart/form-data method=post>
-    <input type=file accept=image/jpeg name=f>
-    <input type=submit>
+    <input type=file accept=image/* name=f>
+    <input type=submit value=max100k>
     <br>
     <textarea name=p id=p rows=8 cols=72 readonly>((plugin_entity))</textarea>
-    <input type=hidden name=s value=((signature))>
+    <input name=s value=((signature)) type=hidden>
   </form>
 </body>
 </html>

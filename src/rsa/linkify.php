@@ -54,7 +54,7 @@ function frontend(string $file, string $p, string $s, string $action): string {
   $f = str_replace('((form_action))', $action, $f);
   $f = minify_html($f);
 
-  $f = str_replace('((plugin_entity))', htmlspecialchars($p), $f); // most not minify or handle `&quot;`
+  $f = str_replace('((plugin_entity))', htmlspecialchars($p), $f); // must not minify or handle `&quot;`
 
   return $f;
 }
