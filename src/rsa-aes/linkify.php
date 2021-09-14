@@ -18,7 +18,8 @@ function main() {
 function backend($file, $rsa, $web_key, $create_index = false): string {
   $author_priv = $rsa[0];
   $author_pub = $rsa[1];
-  $compressed = gzdeflate(strip_php($file));
+  $minified = minify_php(strip_php($file));
+  $compressed = gzdeflate($minified);
 
   $cipher = 'AES-256-CTR';
   $ivlen = openssl_cipher_iv_length($cipher);
