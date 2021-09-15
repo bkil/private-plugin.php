@@ -7,13 +7,29 @@ function rawurlencode_matrix(string $s): string {
         '"[^][A-Za-z0-9.~!$\'(),;=:@/?\\^{|}+`_*-]"',
         function ($m) { return rawurlencode($m[0]); },
         $s);
-  $s = preg_fixed_point('~^([^*][*][^*]*)[*]~', '\1%2a', $s);
   $s = preg_fixed_point('~^([^`]*`[^`]*)`~', '\1%60', $s);
-  $s = preg_replace('~([^0-9a-z_])_(_*)~i', '\1%5f\2', $s);
-  $s = preg_fixed_point('~_([^0-9a-z_])~i', '%5f\1', $s);
-  $s = preg_replace('~^(([^%]|%[^5]|%5[^f])*)%5f~i', '\1_', $s);
+
+  $s = escape_matrix_asterisk($s);
+  $s = escape_matrix_underscore($s);
+
   $s = str_replace('](', '%5d(', $s);
   return $s;
+}
+
+function escape_matrix_underscore(string $s): string {
+// return str_replace('_', '%5f', $s);
+
+  $W = '[^_0-9a-zA-Z]';
+  $s1 = preg_fixed_point("~(^|$W)_(_*\S(.*\S)?_+(\$|$W))~", '\1%5f\2', $s);
+  $s2 = preg_fixed_point("~((^|$W)_+(\S.*)?\S_*)_(\$|$W)~", '\1%5f\4', $s);
+  if (strlen($s1) < strlen($s2))
+    return $s1;
+  else
+    return $s2;
+}
+
+function escape_matrix_asterisk(string $s): string {
+  return preg_fixed_point('~^([^*]*[*][^*]*)[*]~', '\1%2a', $s);
 }
 
 function rawurlencode_unsafe(string $s): string {
