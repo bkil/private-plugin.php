@@ -66,6 +66,8 @@ function minify(string $s, bool $single_line, string $wordchars): string {
   $s = str_replace('&', '&amp;', $s);
   $separation_regexp = "~($wordchars) ( *$wordchars)~i";
   $s = preg_replace($separation_regexp, '\1&nbsp;\2', $s);
+  $s = preg_replace('~([0-9]) ( *\.)~', '\1&nbsp;\2', $s);
+  $s = preg_replace('~(\. *) ([0-9])~', '\1&nbsp;\2', $s);
   $s = preg_fixed_point("~(^|\n)(([^\"'\n ]|\"[^\"\n]*\"|'[^'\n]*')*) +~", '\1\2', $s);
   $s = str_replace('&nbsp;', ' ', $s);
   $s = str_replace('&amp;', '&', $s);

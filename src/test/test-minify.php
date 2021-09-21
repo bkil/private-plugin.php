@@ -42,6 +42,10 @@ function test_rawurlencode_matrix(): bool {
 function test_minify_php(): bool {
   return test_fun('minify_php', array(
     " \$s = '// ' ;//b//c\nexit ();\n" => "\$s='// ';exit();",
+    '"1  .  2";' => '"1  .  2";',
+    '1  .  2;' => '1 . 2;',
+    '$a  .  1;' => '$a. 1;',
+    '1  .  $a;' => '1 .$a;',
   ));
 }
 
