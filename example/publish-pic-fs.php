@@ -29,7 +29,7 @@ if (isset($_FILES['f'])) {
   $t = $f['tmp_name'];
   $s = $f['size'];
   $c = dirsize('.');
-  if (($f['error'] === UPLOAD_ERR_OK) && ($s < 1e5) && ($s + $c[1] < 1e6) && ($c[0] < 1e3) && (is_uploaded_file($t)) && (@mime_content_type($t) == 'image/jpeg')) {
+  if (($f['error'] === UPLOAD_ERR_OK) && ($s < 1e5) && ($s + $c[1] < 1e6) && ($c[0] < 1e3) && (is_uploaded_file($t)) && (strpos(@mime_content_type($t),'image/')===0)) {
     $o = strval($m);
     @mkdir($o);
     $d = $o . '/' . sha1_file($t) . '.jpeg';
@@ -49,7 +49,7 @@ if ($e) {
 </head>
 <body>
   <form action=. enctype=multipart/form-data method=post>
-  <input type=file name=f accept=image/jpeg>
+  <input type=file accept=image/* name=f>
   <input type=submit value=max100k>
   <input type=hidden name=p value="<?php @print($p);?>">
   </form>
