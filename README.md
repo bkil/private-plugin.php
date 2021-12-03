@@ -176,6 +176,7 @@ Some examples gathered from online comments:
 * **4096** maximum string length for redirections and rewrites https://vercel.com/docs/cli#project-configuration/functions
 * **4000**: NI LabView2012
 * **511**: NI LabView2013 https://lavag.org/topic/18435-web-service-url-length-limits-lv2013-vs-lv2012/
+* **1024** bytes: Gemini https://gitlab.com/gemini-specification/protocol/-/blob/75fdc58c6f76a8172ccd7dbf90824dd6146ed0b6/specification.gmi#L149
 
 RFC7230
 
