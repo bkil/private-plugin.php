@@ -15,7 +15,9 @@ function main() {
 //  $f = frontend('../../example/publish-pic-fe.html', $p, $s, $host);
 //  $data_uri = 'data:text/html;,' . rawurlencode_matrix($f);
 //  $surl = $host . 'k.html#' . $data_uri;
-  $surl = str_replace('+', '%2B', $host . '?p=' . rawurlencode_matrix($p) . '&s=' . $s);
+  $surl = $host . '?p=' . rawurlencode_matrix($p) . '&s=' . $s;
+  $surl = str_replace('+', '%2B', $surl);
+  $surl = str_replace('%20', '+', $surl);
   print($surl . PHP_EOL);
 
 //  $iframe = 'document.getElementsByTagName(\'body\')[0].innerHTML="<iframe width=100% height=200px src=\"' . $data_uri . '\"></iframe>";';
