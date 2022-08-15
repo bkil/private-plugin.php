@@ -5,18 +5,6 @@ include_once '../include/minify.php';
 function test_rawurlencode_matrix(): bool {
   return test_fun('rawurlencode_matrix', array(
     'a' => 'a',
-    'a*b' => 'a*b',
-    'a*b*' => 'a*b%2a',
-    'a*b*c' => 'a*b%2ac',
-    'aa*bb*cc' => 'aa*bb%2acc',
-    'a*b*c*d' => 'a*b%2ac%2ad',
-    'a*.*b' => 'a*.%2ab',
-    'a*..*b' => 'a*..%2ab',
-    'a*.*b*.*c' => 'a*.%2ab%2a.%2ac',
-    'a*b.c*d' => 'a*b.c%2ad',
-    'a*.b*c.*d' => 'a*.b%2ac.%2ad',
-    '**a**' => '*%2aa%2a%2a',
-    'a**b**c' => 'a*%2ab%2a%2ac',
     'a_b_c' => 'a_b_c',
     'a__b__c' => 'a__b__c',
     '_._a_.' => '_._a%5f.',

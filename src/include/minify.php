@@ -4,12 +4,11 @@
 // It also unencodes HTML entities like &amp; in non-preformatted context
 function rawurlencode_matrix(string $s): string {
   $s = preg_replace_callback(
-        '"[^][A-Za-z0-9.~!$\'(),;=:@/?\\^{|}+`_*-]"',
+        '"[^][A-Za-z0-9.~!$\'(),;=:@/?\\^{|}+`_-]"',
         function ($m) { return rawurlencode($m[0]); },
         $s);
   $s = preg_fixed_point('~^([^`]*`[^`]*)`~', '\1%60', $s);
 
-  $s = escape_matrix_asterisk($s);
   $s = escape_matrix_underscore($s);
 
   $s = str_replace('](', '%5d(', $s);
