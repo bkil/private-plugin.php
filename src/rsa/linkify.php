@@ -6,20 +6,21 @@ include_once '../include/openssl.php';
 
 function main() {
   $keys = get_priv_pub_key();
-  $ps = backend('../../example/publish-pic-be.php', $keys, $create_index=true);
+  $host = get_target_host();
+  $ps = backend('../../example/voting-fs.php', $keys, $create_index=true);
+//  $ps = backend('../../example/publish-pic-be.php', $keys, $create_index=true);
   $p = $ps[0];
   $s = $ps[1];
-  $host = get_target_host();
 
-  $f = frontend('../../example/publish-pic-fe.html', $p, $s, $host);
-
-  $data_uri = 'data:text/html;,' . rawurlencode_matrix($f);
-  $surl = $host . 'k.html#' . $data_uri;
+//  $f = frontend('../../example/publish-pic-fe.html', $p, $s, $host);
+//  $data_uri = 'data:text/html;,' . rawurlencode_matrix($f);
+//  $surl = $host . 'k.html#' . $data_uri;
+  $surl = str_replace('+', '%2B', $host . '?p=' . rawurlencode_matrix($p) . '&s=' . $s);
   print($surl . PHP_EOL);
 
-  $iframe = 'document.getElementsByTagName(\'body\')[0].innerHTML="<iframe width=100% height=200px src=\"' . $data_uri . '\"></iframe>";';
-  $iurl = $host . 'j.html#' . rawurlencode_matrix($iframe);
-  print($iurl . PHP_EOL);
+//  $iframe = 'document.getElementsByTagName(\'body\')[0].innerHTML="<iframe width=100% height=200px src=\"' . $data_uri . '\"></iframe>";';
+//  $iurl = $host . 'j.html#' . rawurlencode_matrix($iframe);
+//  print($iurl . PHP_EOL);
 
   put_var('test.url', $surl);
 }
