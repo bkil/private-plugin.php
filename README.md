@@ -177,6 +177,7 @@ Some examples gathered from online comments:
 * **4000**: NI LabView2012
 * **511**: NI LabView2013 https://lavag.org/topic/18435-web-service-url-length-limits-lv2013-vs-lv2012/
 * **1024** bytes: Gemini https://gitlab.com/gemini-specification/protocol/-/blob/75fdc58c6f76a8172ccd7dbf90824dd6146ed0b6/specification.gmi#L149
+* **255** bytes: Gopher selector https://datatracker.ietf.org/doc/html/rfc1436#page-13
 
 RFC7230
 
@@ -190,7 +191,7 @@ RFC7230
   * https://www.seroundtable.com/google-url-characters-18219.html
 * **4043**: Internet Explorer 9, 10, 11
 * **100k+**: Firefox, 80k+ Safari, 190k+ Opera https://linux.m2osw.com/url_limits?page=2
-* **2048:** sitemaps?
+* **2047** Unicode characters: Sitemaps https://sitemaps.org/protocol.html
 * https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
 * https://web.archive.org/web/20190902193246/https://boutell.com/newfaq/misc/urllength.html
 
