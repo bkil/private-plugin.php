@@ -33,28 +33,28 @@ if (preg_match('/^[0-8]$/', $e = $R[e])) {
     }
 
   foreach ($V as $v) {
-    echo '<tr><td>' . htmlspecialchars($v[0]);
+    echo '<tr';
     $C[0] -= 1;
-    $j = 1;
-    foreach ($o as $i => $q)
-      if ($i) {
-        $c = '>';
-        // converting them to numbers upon input would have been better, but longer
-        if ($v[$j] == $i) {
-          $C[$i] -= 1;
-          $c = ' checked>';
-          $j++;
-        }
-        echo '<td><input type=checkbox' . $c;
+    $j = 0;
+    for ($i=5; $i; $i--) {
+      $c = 0;
+      // converting them to numbers upon input would have been better, but longer
+      if ($v[$j] == $i) {
+        $C[$i] -= 1;
+        $c = checked;
+        $j++;
       }
+      echo '><td><input type=checkbox ' . $c;
+    }
+    echo '><td>' . htmlspecialchars($v[$j]);
   }
 
   echo '<tr>';
-  foreach ($o as $i=>$q)
+  for ($i=6; $i--;)
     echo '<td>' . -$C[$i];
 
   echo '<tr';
-  foreach ($o as $i=>$q)
+  for ($i=6; $i--;)
     echo '><td><input name=v[] ' .
     ($i ? 'type=checkbox value=' . $i : 0);
 
@@ -62,9 +62,10 @@ if (preg_match('/^[0-8]$/', $e = $R[e])) {
 } else {
   // HTML index to create new poll
   $e = $m;
-  echo '<label>Description<input name=o[]></label><label>Choices</label>';
-  for ($i=5; $i; $i--)
+  echo '<label>Choices</label>';
+  for ($i=5; $i--;)
     echo '<input name=o[]>';
+  echo '<label>Description<input name=o[]></label>';
 }
 
 echo '<input type=submit><input name=p value="' . htmlspecialchars($p) .
