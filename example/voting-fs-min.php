@@ -14,7 +14,7 @@ if (preg_match('/^[0-8]$/', $e = $R[e])) {
   $P = urlencode($p);
   $S = urlencode($s);
   echo "<a href=\"?p=$P&s=$S\">New poll</a><table><tr>";
-  foreach ($o = $R[o] as $i => $q) {
+  foreach ($o = $R[o] as $q) {
     $O .= '&o[]=' . urlencode($q);
     echo '<th><input name=o[] value="' . htmlspecialchars($q) . '">';
   }
