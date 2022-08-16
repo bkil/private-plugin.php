@@ -1,8 +1,9 @@
 <?php
+//1551
 // 1e5 seconds is ~1.16 days
-$m = time() / 1e5 % 9;
+$m = -time() / 1e5 % 9;
 // cleanup old polls after ~10 days
-foreach(glob((($m + 1) % 9) . '*') as $n)
+foreach(glob((($m - 1) % 9) . '*') as $n)
   unlink($n);
 
 // break some HTML tags to avoid Comodo WAF firewall warnings
@@ -33,14 +34,14 @@ if (preg_match('/^[0-8]$/', $e = $R[e])) {
 
   foreach ($V as $v) {
     echo '<tr><td>' . htmlspecialchars($v[0]);
-    $C[0]++;
+    $C[0] -= 1;
     $j = 1;
     foreach ($o as $i => $q)
       if ($i) {
         $c = '>';
         // converting them to numbers upon input would have been better, but longer
         if ($v[$j] == $i) {
-          $C[$i]++;
+          $C[$i] -= 1;
           $c = ' checked>';
           $j++;
         }
@@ -50,7 +51,7 @@ if (preg_match('/^[0-8]$/', $e = $R[e])) {
 
   echo '<tr>';
   foreach ($o as $i=>$q)
-    echo '<td>' . $C[$i];
+    echo '<td>' . -$C[$i];
 
   echo '<tr';
   foreach ($o as $i=>$q)
