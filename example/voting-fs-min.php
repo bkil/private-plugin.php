@@ -2,7 +2,7 @@
 $R=$_REQUEST;
 // 1e5 seconds is ~1.16 days
 $e = time() / 1e5 % 9;
-// cleanup old polls after ~10 days
+// clean up old polls after ~10 days
 foreach(glob((($e + 1) % 9) . '*') as $n)
   unlink($n);
 
@@ -21,7 +21,6 @@ if (preg_match('/^[0-8]$/', $R[e])) {
   $e = $R[e];
 
   // honor disk quota
-  $b = 0;
   foreach (glob('*') as $g)
     $b -= lstat($g)[12];
 
