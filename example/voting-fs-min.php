@@ -1,23 +1,24 @@
 <?php
-//1551
+$R=$_REQUEST;
 // 1e5 seconds is ~1.16 days
-$m = time() / 1e5 % 9;
+$e = time() / 1e5 % 9;
 // cleanup old polls after ~10 days
-foreach(glob((($m + 1) % 9) . '*') as $n)
+foreach(glob((($e + 1) % 9) . '*') as $n)
   unlink($n);
 
+$h = '><a href="?p=' . urlencode($p) . '&s=' . urlencode($s);
 // break some HTML tags to avoid Comodo WAF firewall warnings
-echo '<!DOC' . 'TYPE html><html><form>';
-$R=$_REQUEST;
-if (preg_match('/^[0-8]$/', $e = $R[e])) {
+echo '<!DOC' . 'TYPE html><html><form' . $h . '">New poll</a><table><tr><th colspan=5>Choices<th>Description<tr>';
+
+for ($i=6; $i--;) {
+  $q = $R[o][5-$i];
+  $O .= '&o[]=' . urlencode($q);
+  echo '<th><input name=o[] value="' . htmlspecialchars($q) . '">';
+}
+
+if (preg_match('/^[0-8]$/', $R[e])) {
   // new poll: o e
-  $P = urlencode($p);
-  $S = urlencode($s);
-  echo "<a href=\"?p=$P&s=$S\">New poll</a><table><tr>";
-  foreach ($o = $R[o] as $q) {
-    $O .= '&o[]=' . urlencode($q);
-    echo '<th><input name=o[] value="' . htmlspecialchars($q) . '">';
-  }
+  $e = $R[e];
 
   // honor disk quota
   $b = 0;
@@ -58,16 +59,8 @@ if (preg_match('/^[0-8]$/', $e = $R[e])) {
     echo '><td><input name=v[] ' .
     ($i ? 'type=checkbox value=' . $i : 0);
 
-  echo "></table><a href=\"?p=$P&s=$S$O&e=$e\">Share</a>";
-} else {
-  // HTML index to create new poll
-  $e = $m;
-  echo '<label>Choices</label>';
-  for ($i=5; $i--;)
-    echo '<input name=o[]>';
-  echo '<label>Description<input name=o[]></label>';
+  echo "$h$O&e=$e\">Share</a>";
 }
 
-echo '<input type=submit><input name=p value="' . htmlspecialchars($p) .
-  '"><input name=e value=' . $e .
-  '><input name=s value=' . $s . '>';
+echo '</table><input type=submit><input name=p value="' . htmlspecialchars($p) .
+  "\"><input name=e value=$e><input name=s value=$s>";
