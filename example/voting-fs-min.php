@@ -1,9 +1,9 @@
 <?php
 //1551
 // 1e5 seconds is ~1.16 days
-$m = -time() / 1e5 % 9;
+$m = time() / 1e5 % 9;
 // cleanup old polls after ~10 days
-foreach(glob((($m - 1) % 9) . '*') as $n)
+foreach(glob((($m + 1) % 9) . '*') as $n)
   unlink($n);
 
 // break some HTML tags to avoid Comodo WAF firewall warnings
