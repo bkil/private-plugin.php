@@ -1,21 +1,21 @@
 <?php
 $R = $_REQUEST;
 
-flock($f = fopen('w', 'c+'), LOCK_EX);
+flock($f = fopen(9, 'c+'), LOCK_EX);
 
-$d = stream_get_contents($f);
+$d = file_get_contents(9);
 if (isset($R['c']))
   if ($R['c']) {
-    ftruncate($f, 0);
-    rewind($f);
-    fwrite($f,
+    if (file_put_contents(
+      8,
       $d = substr(
         $d .
         date("\nD H:i ") .
         htmlspecialchars(
-          preg_replace('/[[:cntrl:]]/', '', $R['c'])),
-        -1e4));
-    fflush($f);
+          preg_replace('/[[:cntrl:]]/', 0, $R['c'])),
+        -1e4))
+      )
+      rename(8, 9);
   }
 
 flock($f, LOCK_UN);
