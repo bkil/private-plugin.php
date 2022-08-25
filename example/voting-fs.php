@@ -36,15 +36,22 @@ if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
   foreach (glob('*') as $g)
     $b -= lstat($g)[12];
 
-  $V = json_decode(@file_get_contents($f = $e . sha1($O)));
-  if ($b > -1e3)
-    if (isset($R['v'])) {
-      // place vote on a poll: o e v
-      $V[] = $R['v'];
-      $t = tempnam('', '');
-      if (file_put_contents($t, json_encode($V)))
-        rename($t, $f);
-    }
+  // place vote on a poll: o e v
+  $f = $e . sha1($O);
+  if ($w = (($b > -1e3) && isset($R['v']) && (strlen(json_encode($v = $R['v'])) < 1e3)))
+    flock($F = fopen($f, 'c+'), LOCK_EX);
+
+  $V = json_decode(@file_get_contents($f));
+  if ($w) {
+    $V[] = $v;
+    $t = tempnam(0, 0);
+    if (file_put_contents($t, json_encode($V)))
+      rename($t, $f);
+    else
+      @unlink($t);
+    flock($F, LOCK_UN);
+    fclose($F);
+  }
 
   if ($V)
     foreach ($V as $v) {
@@ -72,13 +79,13 @@ if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
   echo '<tr';
   foreach($o as $i=>$q)
     echo '><td><input name=v[] ' .
-    ($i ? 'type=checkbox value=' . $i : 'required');
+    ($i ? 'type=checkbox value=' . $i : 'required autofocus');
 
   echo '></table>' . -($m - $e - 8) % 9 . ' days left<input type=submit value=Vote>';
   echo "$h$O&e=$e\">Share link</a>";
 } else {
   // HTML index to create new poll
-  echo '<input type=submit value=CreatePoll><label>Description<input required name=o[]></label><label>Choices</label><input required name=o[]>';
+  echo '<input type=submit value=CreatePoll><label>Description<input required autofocus name=o[]></label><label>Choices</label><input required name=o[]>';
   for ($i=7; $i--;)
     echo '<input name=o[]>';
   $e = $m;
