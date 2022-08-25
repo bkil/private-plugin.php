@@ -17,7 +17,7 @@ if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
   $o = $R['o'];
 
   $h = '<a href="?p=' . urlencode($p) . '&s=' . urlencode($s);
-  echo $h . '">New poll</a><table><tr>';
+  echo $h . '">New poll</a><table><tr><th>Edit';
   $O = '';
   $C = [];
   foreach ($o as $i => $q) {
@@ -43,7 +43,12 @@ if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
 
   $V = json_decode(@file_get_contents($f));
   if ($w) {
-    $V[] = $v;
+    // edit vote: o e v i
+    if ((isset($R['i'])) && (($i = intval($R[i])) >= 0) && ($i < count($V)))
+      $V[$i] = $v;
+    else
+      $V[] = $v;
+
     $t = tempnam(0, 0);
     if (file_put_contents($t, json_encode($V)))
       rename($t, $f);
@@ -54,8 +59,8 @@ if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
   }
 
   if ($V)
-    foreach ($V as $v) {
-      echo '<tr><td>' . htmlspecialchars($v[0]);
+    foreach ($V as $k => $v) {
+      echo '<tr><td><input type=radio name=i value=' . $k . '><td>' . htmlspecialchars($v[0]);
       $C[0]--;
       $j = 1;
       foreach ($o as $i => $q)
@@ -72,11 +77,11 @@ if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
         }
     }
 
-  echo '<tr>';
+  echo '<tr><td>';
   foreach ($C as $c)
     echo '<td>' . -$c;
 
-  echo '<tr';
+  echo '<tr><td><input type=radio name=i value=-1 checked';
   foreach($o as $i=>$q)
     echo '><td><input name=v[] ' .
     ($i ? 'type=checkbox value=' . $i : 'required autofocus');
