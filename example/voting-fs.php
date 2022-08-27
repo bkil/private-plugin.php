@@ -14,13 +14,11 @@ echo '<!DOC' . 'TYPE html><html><head><me' .
 
 if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
   // get votes on poll: o e
-  $o = $R['o'];
-
-  $h = '<a href="?p=' . urlencode($p) . '&s=' . urlencode($s);
-  echo $h . '">New poll</a><table><tr><th>Edit';
+  echo ($h = '<a href="?p=' . urlencode($p) . '&s=' . urlencode($s)) .
+    '">New poll</a><table><tr><th>Edit';
   $O = '';
   $C = [];
-  foreach ($o as $i => $q) {
+  foreach ($o = $R['o'] as $i => $q) {
     // stop after seeing first empty choice
     if (!$q) {
       $o = array_slice($o, 0, $i);
@@ -44,12 +42,12 @@ if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
   $V = json_decode(@file_get_contents($f));
   if ($w) {
     // edit vote: o e v i
-    if ((isset($R['i'])) && (($i = intval($R[i])) >= 0) && ($i < count($V)))
+    if ((isset($R['i'])) && (($i = intval($R['i'])) >= 0) && ($i < count($V)))
       $V[$i] = $v;
     else
       $V[] = $v;
 
-    $t = tempnam(0, 0);
+    $t = tempnam('.', 9);
     if (file_put_contents($t, json_encode($V)))
       rename($t, $f);
     else
