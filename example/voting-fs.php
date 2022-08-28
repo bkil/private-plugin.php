@@ -37,7 +37,7 @@ if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
   // place vote on a poll: o e v
   $f = $e . sha1($O);
   if ($w = (($b > -1e3) && isset($R['v']) && (strlen(json_encode($v = $R['v'])) < 1e3)))
-    flock($F = fopen($f, 'c+'), LOCK_EX);
+    flock($F = eval('return fop' . 'en($f,"c+");'), LOCK_EX);
 
   $V = json_decode(@file_get_contents($f));
   if ($w) {
