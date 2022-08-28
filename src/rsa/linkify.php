@@ -15,7 +15,8 @@ function main() {
 //  $f = frontend('../../example/publish-pic-fe.html', $p, $s, $host);
 //  $data_uri = 'data:text/html;,' . rawurlencode_matrix($f);
 //  $surl = $host . 'k.html#' . $data_uri;
-  $surl = $host . '?p=' . rawurlencode_matrix($p) . '&s=' . $s;
+  $param_delim = strpos($host, '?') ? '&' : '?';
+  $surl = $host . $param_delim . 'p=' . rawurlencode_matrix($p) . '&s=' . $s;
   $surl = str_replace('+', '%2B', $surl);
   $surl = str_replace('%20', '+', $surl);
   print($surl . PHP_EOL);
