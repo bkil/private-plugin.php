@@ -187,6 +187,7 @@ You should host all sources containing this code on a separate, possibly static 
 ## References
 
 * https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload
+* https://itty.bitty.site/
 
 ### Server side URI length limit
 
