@@ -47,8 +47,7 @@ if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
     else
       $V[] = $v;
 
-    $t = tempnam('.', 9);
-    if (file_put_contents($t, json_encode($V)))
+    if (file_put_contents($t = tempnam('.', 9), json_encode($V)))
       rename($t, $f);
     else
       @unlink($t);
