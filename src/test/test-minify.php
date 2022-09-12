@@ -39,4 +39,11 @@ function test_minify_php(): bool {
   ));
 }
 
-exit(test_rawurlencode_matrix() & test_minify_php() ? 0 : 1);
+function test_minify_html(): bool {
+  return test_fun('minify_html', array(
+    'a.replace(/"/, b).replace(/"/, b)' => 'a.replace(/"/,b).replace(/"/,b)',
+    "a.replace(/'/, b).replace(/'/, b)" => "a.replace(/'/,b).replace(/'/,b)",
+  ));
+}
+
+exit(test_rawurlencode_matrix() & test_minify_php() & test_minify_html() ? 0 : 1);

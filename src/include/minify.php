@@ -2,15 +2,16 @@
 
 // Matrix Element has a bug that it eats certain rich formatting characters even in URI's
 // It also unencodes HTML entities like &amp; in non-preformatted context
+// Some testing with bridge round trips proves that none of `*`, `_` or `\\` are safe.
+// `%` is needed for percentile escaping.
+// `#` chops off the anchor
 function rawurlencode_matrix(string $s): string {
   $s = preg_replace_callback(
-        '"[^][A-Za-z0-9.~!$\'(),;=:@/?\\^{|}+`_-]"',
+        '*[^][A-Za-z0-9.~!$\'()+,;<=>:@/?^`{|}"&-]*',
         function ($m) { return rawurlencode($m[0]); },
         $s);
   $s = preg_fixed_point('~^([^`]*`[^`]*)`~', '\1%60', $s);
-
-  $s = escape_matrix_underscore($s);
-
+  $s = preg_replace('~<([!/]?[a-zA-Z])~', '%3c\1', $s);
   $s = str_replace('](', '%5d(', $s);
   return $s;
 }
@@ -49,13 +50,27 @@ function urlencode_unsafe(string $s): string {
 
 function minify_php(string $s, bool $single_line = true): string {
   // this does not handle the full grammar - do improve on demand
-  $s = preg_replace("~(^|\n)(([^\"'/\n]|/[^/]|\"[^\"\n]*\"|'[^'\n]*')*)//[^\n]*~", '\1\2', $s);
+  $s = delete_comments($s);
   return minify($s, $single_line, '[a-z0-9_]');
 }
 
 function minify_html(string $s, bool $single_line = true): string {
   // this does not handle the full grammar - do improve on demand
-  return minify($s, $single_line, '[a-z0-9_/"\".{}=*-]');
+  $s = minify($s, $single_line, "[a-z0-9_\\.*/={}()\"'-]");
+  return $s;
+}
+
+function minify_js(string $s, bool $single_line = true): string {
+  // this does not handle the full grammar - do improve on demand
+  $s = delete_comments($s);
+  $s = minify($s, $single_line, "[a-z0-9_\\*]");
+  $s = str_replace(';}', '}', $s);
+  $s = preg_replace('/;$/', '', $s);
+  return $s;
+}
+
+function delete_comments(string $s): string {
+  return preg_replace("~(^|\n)(([^\"'/\n]|/[^/]|\"[^\"\n]*\"|'[^'\n]*')*\s+|)//[^\n]*~", '\1\2', $s);
 }
 
 function minify(string $s, bool $single_line, string $wordchars): string {
@@ -63,12 +78,16 @@ function minify(string $s, bool $single_line, string $wordchars): string {
     $s = str_replace("\n", ' ', $s);
 
   $s = str_replace('&', '&amp;', $s);
+  $s = preg_fixed_point("~(/[^/ a-z]*)\"([^/ a-z]*/)~", '\1&quot;\2', $s);
+  $s = preg_fixed_point("~(/[^/ a-z]*)'([^/ a-z]*/)~", '\1&apos;\2', $s);
   $separation_regexp = "~($wordchars) ( *$wordchars)~i";
   $s = preg_replace($separation_regexp, '\1&nbsp;\2', $s);
   $s = preg_replace('~([0-9]) ( *\.)~', '\1&nbsp;\2', $s);
   $s = preg_replace('~(\. *) ([0-9])~', '\1&nbsp;\2', $s);
   $s = preg_fixed_point("~(^|\n)(([^\"'\n ]|\"([^\"\n\\\\]|\\\\.)*\"|'[^'\n]*')*) +~", '\1\2', $s);
   $s = str_replace('&nbsp;', ' ', $s);
+  $s = str_replace('&quot;', '"', $s);
+  $s = str_replace('&apos;', "'", $s);
   $s = str_replace('&amp;', '&', $s);
   $s = preg_replace('~\s*$~', '', $s);
   return $s;

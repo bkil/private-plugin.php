@@ -5,9 +5,9 @@ include_once '../include/minify.php';
 include_once '../include/openssl.php';
 
 function main() {
-  $rsa = get_priv_pub_key();
+  $rsa = get_priv_pub_key_rsa();
   $aes = get_aes_key();
-  $p = backend('../../example/publish-pic-fs.php', $rsa, $aes, $create_index=true);
+  $p = backend('../../example/chat-fs.php', $rsa, $aes, $create_index=true);
 
   $host = get_target_host();
   $url = $host . '#' . $p;
