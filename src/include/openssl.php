@@ -37,7 +37,7 @@ function get_priv_pub_key_generic($config): array {
     }
 
     $public_key = openssl_pkey_get_details($keys);
-    $public_key = $public_key["key"];
+    $public_key = $public_key['key'];
     put_var($pub_name, $public_key);
     put_var($priv_name, $private_key);
   }
