@@ -14,8 +14,8 @@ if (isset($R['u'])) {
       $b += lstat($g)[12];
 
     if ($b < 1e4)
-      file_put_contents($u = $m . sha1($u), $u);
+      file_put_contents($m .= sha1($u), $u);
 
-    echo $u;
+    echo $m;
   }
 }
