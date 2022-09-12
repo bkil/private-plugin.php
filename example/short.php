@@ -9,6 +9,8 @@ if (isset($R['u'])) {
   if (preg_match('/^\w+$/', $u = $R['u']))
     header('Location: ' . @file_get_contents($u));
   else if (preg_match('/^https?:[ -~]{1,9000}$/', $u)) {
+
+    // honor disk quota
     $b = 0;
     foreach (glob('*') as $g)
       $b += lstat($g)[12];

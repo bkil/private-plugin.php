@@ -7,6 +7,7 @@ foreach (glob((($m = time() / 1e5 & 7) ^ 4) . '*') as $g)
 if (preg_match('/^\w+$/', $u = $_REQUEST[u]))
   header('Location: ' . file_get_contents($u));
 
+// honor disk quota
 foreach (glob('*') as $g)
   $b += lstat($g)[12];
 
