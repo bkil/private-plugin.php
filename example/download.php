@@ -1,12 +1,11 @@
 <?php
-if (isset($_POST['u'])) {
-  $u = $_POST['u'];
-  if (preg_match('~^(http|ftp)s?://~', $u)) {
+if (isset($_POST['u']))
+  if (preg_match('~^(ht|f)tps?:~', $u = $_POST['u'])) {
     header('content-type: application/octet-stream');
     header('content-disposition: attachment; filename=tmp.bin');
     @readfile(
       $u,
-      false,
+      0,
       stream_context_create(
         array(
           'http' =>
@@ -17,9 +16,12 @@ if (isset($_POST['u'])) {
                   'accept: text/html;q=0.9,*/*;q=0.8',
                   'sec-fetch-user: ?1'
                 )
+            ),
+          'ssl' =>
+            array(
+              'verify_peer' => 0
             )
         )
       )
     );
   }
-}
