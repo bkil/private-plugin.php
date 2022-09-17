@@ -1,6 +1,6 @@
 <?php
 if (isset($_POST['u']))
-  if (preg_match('~^(ht|f)tps?:~', $u = $_POST['u'])) {
+  if (preg_match('~^(ht|f)tps?://~', $u = $_POST['u'])) {
     header('content-type: application/octet-stream');
     header('content-disposition: attachment; filename=tmp.bin');
     @readfile(
