@@ -1,29 +1,29 @@
-E = x =>
+escapeHtml = x =>
   x
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-S = () =>
+getRandomId = () =>
   Math.random().toString(16).substr(2);
 
-R = () => {
+addIframe = () => {
   document.querySelector('#i').innerHTML = '<iframe name=x></iframe>';
-  document.querySelector('iframe').onload = L;
+  document.querySelector('iframe').onload = addCssLink;
 };
 
-W = () => {
-  s = (m + 2) % 9 + S();
+addHiddenFormFields = () => {
+  cssFile = (date + 2) % 9 + getRandomId();
   document.querySelector('#_').innerHTML =
     '<input name=f type=hidden value=' +
-    h +
+    pollFile +
     '><input name=c type=hidden value=' +
-    s +
+    cssFile +
     '>';
 };
 
-L = () => {
+addCssLink = () =>
   document.querySelector('#i').innerHTML =
     "<link type=text/css rel='stylesheet noreferrer' referrerpolicy=no-referrer href=((form_action))" +
     document.querySelector('[name="s"]')
@@ -31,37 +31,36 @@ L = () => {
     .replace(/[+]/g, '-')
     .replace(/\//g, '_') +
     '/' +
-    s +
-    '.css onload=C()>';
-};
+    cssFile +
+    '.css onload={{decodeCss}}()>';
 
-C = () => {
-  a =
+decodeCss = () => {
+  votes =
     decodeURIComponent(
       window.getComputedStyle(document.getElementById('_'), '::after').content
         .replace(/^[^'"]*['"]/, '')
         .replace(/['"][^'"]*$/, '')
         .replace(/[+]/g, ' ')
     );
-  a = a && a != 'none' ? JSON.parse(a) : [];
+  votes = votes && votes != 'none' ? JSON.parse(votes) : [];
 
-  t = '<button onclick=N() type=button>New poll</button><table><tr><th>Edit';
-  d = [];
-  for (i = 0; i < o.length; i++) {
-    d[i] = 0;
-    t += '<th><input readonly value="' + E(o[i]) + '">';
+  t = '<button onclick={{createNewPoll}}() type=button>New poll</button><table><tr><th>Edit';
+  sum = [];
+  for (i = 0; i < options.length; i++) {
+    sum[i] = 0;
+    t += '<th><input readonly value="' + escapeHtml(options[i]) + '">';
   }
 
-  for (k = 0; k < a.length; k++) {
-    v = a[k];
-    t += '<tr><td><input type=radio name=i value=' + k + '><td>' + E(v[0]);
-    d[0]++;
+  for (k = 0; k < votes.length; k++) {
+    v = votes[k];
+    t += '<tr><td><input type=radio name=i value=' + k + '><td>' + escapeHtml(v[0]);
+    sum[0]++;
     j = 1;
-    for (i = 1; i < o.length; i++) {
+    for (i = 1; i < options.length; i++) {
       c = 0;
       if (v[j] == i) {
         c = 'checked';
-        d[i]++;
+        sum[i]++;
         j++;
       }
       t += '<td><input disabled type=checkbox ' + c + '>';
@@ -69,68 +68,68 @@ C = () => {
   }
 
   t += '<tr><td>';
-  for (i = 0; i < o.length; i++)
-    t += '<td>' + d[i];
+  for (i = 0; i < options.length; i++)
+    t += '<td>' + sum[i];
 
   t += '<tr><td><input type=radio name=i checked value=-1';
-  for (i = 0; i < o.length; i++)
+  for (i = 0; i < options.length; i++)
     t += '><td><input name=v[] ' +
     (i ? 'type=checkbox value=' + i : 'required');
 
 
-  W();
+  addHiddenFormFields();
   document.querySelector('#_').innerHTML +=
     t +
     '></table>' +
-    (e - m + 8) % 9 +
+    (expiry - date + 8) % 9 +
     ' days left<input type=submit value=Vote><a target=_blank href="' +
-    E(
-      u ?
-        u + '#' + w.href.substr(0, w.href.lastIndexOf('#') - 1) :
-        w.href
+    escapeHtml(
+      viewerUrlPrefix ?
+        viewerUrlPrefix + '#' + window_location.href.substr(0, window_location.href.lastIndexOf('#') - 1) :
+        window_location.href
     ) +
     '">Share link</a>';
 };
 
-N = () => {
-  w.hash = u ? '##' + u : '';
-  H();
+createNewPoll = () => {
+  window_location.hash = viewerUrlPrefix ? '##' + viewerUrlPrefix : '';
+  reloadOnAnchorChange();
 };
 
-P = () => {
-  l = '?h=' + m + S() + '&e=' + m;
-  o = document.querySelectorAll('input');
-  for (i = 2; i < o.length; i++)
-    if (q = o[i].value)
+updateAnchorOnCreatePoll = () => {
+  l = '?h=' + date + getRandomId() + '&e=' + date;
+  options = document.querySelectorAll('input');
+  for (i = 2; i < options.length; i++)
+    if (q = options[i].value)
       l += '&o=' + encodeURIComponent(q);
-  w.hash = l + (u ? '##' + u : '');
-  H();
+  window_location.hash = l + (viewerUrlPrefix ? '##' + viewerUrlPrefix : '');
+  reloadOnAnchorChange();
 };
 
-H = () => {
-  w = window.location;
-  m = Math.trunc(new Date().getTime() / 1e8 % 9);
+reloadOnAnchorChange = () => {
+  date = Math.trunc(new Date().getTime() / 1e8 % 9);
 
-  u = '';
-  b = w.hash.substr(1);
-  if ((i = b.lastIndexOf('#')) >= 0) {
-    u = b.substr(i + 1);
-    b = b.substr(0, i - 1);
+  viewerUrlPrefix = '';
+  b = window_location.hash.substr(1);
+  if (i = b.lastIndexOf('#') + 1) {
+    viewerUrlPrefix = b.substr(i);
+    b = b.substr(0, i - 2);
   }
 
   p = new URLSearchParams(b);
-  o = p.getAll('o');
-  h = p.get('h');
-  e = p.get('e');
+  options = p.getAll('o');
+  pollFile = p.get('h');
+  expiry = p.get('e');
 
-  if (h) {
-    W();
-    R();
+  if (pollFile) {
+    addHiddenFormFields();
+    addIframe();
     document.forms[0].submit();
   } else
     document.querySelector('#_').innerHTML =
-      '<button onclick=P() type=button>CreatePoll</button><label>Description<input></label><label>Choices</label>' +
+      '<button onclick={{updateAnchorOnCreatePoll}}() type=button>CreatePoll</button><label>Description<input></label><label>Choices</label>' +
       '<input>'.repeat(8);
 };
 
-H();
+window_location = window.location;
+reloadOnAnchorChange();
