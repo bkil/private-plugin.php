@@ -56,7 +56,7 @@ function minify_php(string $s, bool $single_line = true): string {
 
 function minify_html(string $s, bool $single_line = true): string {
   // this does not handle the full grammar - do improve on demand
-  $s = minify($s, $single_line, "[a-z0-9_\\.*/={}()\"'-]");
+  $s = minify($s, $single_line, "[a-z0-9_\\.*/=()\"'-]"); // {}
   return $s;
 }
 
@@ -84,7 +84,7 @@ function minify(string $s, bool $single_line, string $wordchars): string {
   $s = preg_replace($separation_regexp, '\1&nbsp;\2', $s);
   $s = preg_replace('~([0-9]) ( *\.)~', '\1&nbsp;\2', $s);
   $s = preg_replace('~(\. *) ([0-9])~', '\1&nbsp;\2', $s);
-  $s = preg_fixed_point("~(^|\n)(([^\"'\n ]|\"([^\"\n\\\\]|\\\\.)*\"|'[^'\n]*')*) +~", '\1\2', $s);
+  $s = preg_fixed_point("~((?:^|\n)(?:[^\"'\n ]|\"(?:[^\"\n\\\\]|\\\\.)*\"|'[^'\n]*')*) +~", '\1', $s);
   $s = str_replace('&nbsp;', ' ', $s);
   $s = str_replace('&quot;', '"', $s);
   $s = str_replace('&apos;', "'", $s);
@@ -101,7 +101,34 @@ function strip_php(string $file): string {
 }
 
 function preg_fixed_point(string $pattern, string $replacement, string $subject): string {
-  while ($subject !== $new = preg_replace($pattern, $replacement, $subject))
+  while (($subject !== $new = preg_replace($pattern, $replacement, $subject)) &&
+    ($new !== NULL))
     $subject = $new;
+  if ($new === NULL) {
+    $err = preg_last_error_message();
+    echo "warning: $err failure in preg_fixed_point(\"$pattern\", \"$replacement\", \"$subject\")";
+  }
   return $subject;
+}
+
+function preg_last_error_message(): string {
+  $e = preg_last_error();
+  switch ($e) {
+    case PREG_NO_ERROR:
+      return 'PREG_NO_ERROR';
+    case PREG_INTERNAL_ERROR:
+      return 'PREG_INTERNAL_ERROR';
+    case PREG_BACKTRACK_LIMIT_ERROR:
+      return 'PREG_BACKTRACK_LIMIT_ERROR';
+    case PREG_RECURSION_LIMIT_ERROR:
+      return 'PREG_RECURSION_LIMIT_ERROR';
+    case PREG_BAD_UTF8_ERROR:
+      return 'PREG_BAD_UTF8_ERROR';
+    case PREG_BAD_UTF8_OFFSET_ERROR:
+      return 'PREG_BAD_UTF8_OFFSET_ERROR';
+    case 6:
+      return 'PHP_PCRE_JIT_STACKLIMIT_ERROR';
+    default:
+      return "unknown($e)";
+  }
 }
