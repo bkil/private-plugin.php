@@ -1,22 +1,29 @@
 <?php
+include_once '../include/renames.php';
 include_once '../include/minify.php';
 include_once '../include/openssl.php';
 include_once '../include/files.php';
 
-function fullstack(array $keys, string $backend, string $frontend = '', string $javascript = '', bool $create_index = true): string {
-  $ps = backend($backend, $keys, $create_index);
-  $p = $ps[0];
-  $s = $ps[1];
+function fullstack(array $keys, string $backend, string $frontend = '', string $javascript = '', string $frontendRename = '', bool $create_index = true): string {
+  if ($backend) {
+    $ps = backend($backend, $keys, $create_index);
+    $p = $ps[0];
+    $s = $ps[1];
+  } else {
+    $p = '';
+    $s = '';
+  }
 
   $host = get_target_host();
 
+  $frontendMap = $frontendRename ? readCsv($frontendRename) : [];
   if ($frontend) {
-    $url = frontend($frontend, $p, $s, $host);
+    $url = frontend($frontend, $p, $s, $host, $frontendMap);
     if ($javascript)
-      $url .= javascript($javascript, $host);
-  }
-  else
+      $url .= javascript($javascript, $host, $frontendMap);
+  } else {
     $url = $p;
+  }
 
   $url = rawurlencode_matrix($url);
 
@@ -33,6 +40,17 @@ function fullstack(array $keys, string $backend, string $frontend = '', string $
 
   put_var('test.url', $url);
   return $url;
+}
+
+function readCsv(string $file): array {
+  $result = [];
+  if (!$f = fopen($file, 'r'))
+    return $result;
+  while ($record = fgetcsv($f)) {
+    $result[] = $record;
+  }
+  fclose($f);
+  return $result;
 }
 
 function backend(string $file, array $keys, bool $create_index = false): array {
@@ -59,22 +77,26 @@ function backend(string $file, array $keys, bool $create_index = false): array {
   return array($minified, $s);
 }
 
-function frontend(string $file, string $p, string $s, string $host): string {
+function frontend(string $file, string $p, string $s, string $host, array $renameMap = []): string {
   $f = file_get_contents($file);
   $f = str_replace('((plugin_uri))', rawurlencode_unsafe($p), $f);
   $f = str_replace('((signature))', $s, $f);
   $f = str_replace('((form_action))', $host, $f);
   $f = minify_html($f);
+  if ($renameMap)
+    $f = map_rename_html($f, $renameMap);
 
   $f = str_replace('((plugin_entity))', htmlspecialchars($p), $f); // must not minify or handle `&quot;`
 
   return $f;
 }
 
-function javascript(string $file, string $host): string {
+function javascript(string $file, string $host, array $renameMap = []): string {
   $s = file_get_contents($file);
   $s = str_replace('((form_action))', $host, $s);
   $s = minify_js($s);
+  if ($renameMap)
+    $s = map_rename_js($s, $renameMap);
   $s = '<script>' . $s . '</script>';
   return $s;
 }
