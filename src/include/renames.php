@@ -13,7 +13,7 @@ function map_rename_html(string $str, array $map): string {
     $todo = $match[2];
     $in = $match[3];
 
-    if (1 === preg_match("/^(.* on[a-z]+)(=(:?'[^'>]*'|\"[^\">]*\"|[^ '\">]+)[ >])/", $todo, $match)) {
+    if (1 === preg_match("/^(.* on[a-z]+)(=(:?(:?'[^'>]*'|\"[^\">]*\"|[^ '\">])+)[ >])/", $todo, $match)) {
       $out .= $match[1];
       $todo = $match[2];
       if (NULL === $res = preg_replace($from, $to, $todo))
