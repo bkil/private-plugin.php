@@ -5,7 +5,7 @@
   <link rel="shortcut icon" type=image/x-icon href=data:image/x-icon;,>
 </head>
 <body>
-  <form action=. method=post>
+  <form method=post action=.>
   <label for=o>Share your knowledge here</label>
   <br>
   <textarea id=o name=o maxlength=4096 rows=20 cols=40><?php
