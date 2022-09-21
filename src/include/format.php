@@ -37,6 +37,7 @@ function fullstack(array $keys, string $backend, string $frontend = '', string $
     $url = str_replace('+', '%2B', $url);
     $url = str_replace('%20', '+', $url);
   }
+  $url = preg_replace('/>$/', '%3E', $url);
 
   put_var('test.url', $url);
   return $url;
