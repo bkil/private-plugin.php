@@ -25,7 +25,7 @@ if (preg_match('/^[0-8]$/', $R[e])) {
     $b -= lstat($g)[12];
 
   $V = json_decode(file_get_contents($f = $e . sha1($O)));
-  if ($b > -1e3)
+  if (1e3 > -$b)
     if ($R[v][0]) {
       // place vote on a poll: o e v
       $V[] = $R[v];
