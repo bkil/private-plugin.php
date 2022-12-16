@@ -12,13 +12,13 @@ echo '<!DOC' . 'TYPE html><html><head><me' .
   'nk rel="shortcut icon" type=image/x-icon href=data:image/x-icon;,><s' .
   'tyle>input,label{display:block}</style><body><form action=? method=post>';
 
-if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
+if (preg_match('/^[0-8]$/', $e = $R['e'] ?? 9)) {
   // get votes on poll: o e
   echo ($h = '<a href="?p=' . urlencode($p) . '&s=' . urlencode($s)) .
     '">New poll</a><table><tr><th>Edit';
   $O = '';
   $C = [];
-  foreach ($o = $R['o'] as $i => $q) {
+  foreach ($o = $R['o'] ?? [] as $i => $q) {
     // stop after seeing first empty choice
     if (!$q) {
       $o = array_slice($o, 0, $i);
@@ -36,13 +36,13 @@ if (isset($R['o']) && isset($R['e']) && preg_match('/^[0-8]$/', $e = $R['e'])) {
 
   // place vote on a poll: o e v
   $f = $e . sha1($O);
-  if ($w = (($b > -1e3) && isset($R['v']) && (strlen(json_encode($v = $R['v'])) < 1e3)))
+  if ($w = (($b > -1e3) && (strlen(json_encode($v = $R['v'] ?? [])) < 1e3)))
     flock($F = eval('return fop' . 'en($f,"c+");'), LOCK_EX);
 
   $V = json_decode(@file_get_contents($f));
   if ($w) {
     // edit vote: o e v i
-    if ((isset($R['i'])) && (($i = intval($R['i'])) >= 0) && ($i < count($V)))
+    if ((($i = intval($R['i'] ?? -1)) >= 0) && ($i < count($V)))
       $V[$i] = $v;
     else
       $V[] = $v;
