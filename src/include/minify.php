@@ -63,8 +63,12 @@ function minify_html(string $s, bool $single_line = true): string {
 function minify_js(string $s, bool $single_line = true): string {
   // this does not handle the full grammar - do improve on demand
   $s = delete_comments($s);
-  $s = minify($s, $single_line, "[a-z0-9_\\*]");
+  $s = preg_replace('/\(\s*([a-zA-Z_][a-zA-Z_0-9]*)\s*\)\s*(=>)/', ' \1\2', $s);
+  $s = minify($s, $single_line, "[a-z0-9_\\\\]");
   $s = str_replace(';}', '}', $s);
+  $s = str_replace(',]', ']', $s);
+  $s = preg_replace('/\b(const|let|var) ([a-zA-Z_][a-zA-Z_0-9]* *=)/', '\2', $s);
+  $s = preg_replace('/\b(let|var) ([a-zA-Z_][a-zA-Z_0-9]*)(,[a-zA-Z_][a-zA-Z_0-9]*)*;/', '', $s);
   $s = preg_replace('/;$/', '', $s);
   return $s;
 }
