@@ -552,7 +552,6 @@ function lexer(string $in): string {
       $s1Def();
   }
 
-//  echo $s . ' ' . $indent . ' ' . json_encode($scope) . ' ' . json_encode($global) . PHP_EOL;
   return $o;
 }
 
@@ -561,7 +560,7 @@ function isCharJSVarFirst(string $c): bool {
 }
 
 function isCharJSVarRest(string $c): bool {
-  return isCharJSVarFirst($c) || ($c >= '0') && ($c <= '9');
+  return isCharJSVarFirst($c) || isCharDigit($c);
 }
 
 function isCharDigit(string $c): bool {
