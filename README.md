@@ -228,6 +228,7 @@ RFC7230
 * **4043**: Internet Explorer 9, 10, 11
 * **100k+**: Firefox, 80k+ Safari, 190k+ Opera https://linux.m2osw.com/url_limits?page=2
 * **2047** Unicode characters: Sitemaps https://sitemaps.org/protocol.html
+* **4096** characters: address mask in AdGuard filter https://kb.adguard.com/en/general/how-to-create-your-own-ad-filters#basic-rules-syntax
 * https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
 * https://web.archive.org/web/20190902193246/https://boutell.com/newfaq/misc/urllength.html
 
